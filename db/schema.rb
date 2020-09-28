@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_28_195344) do
+ActiveRecord::Schema.define(version: 2020_09_28_202405) do
 
   create_table "financial_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "transaction_type"
@@ -21,4 +21,19 @@ ActiveRecord::Schema.define(version: 2020_09_28_195344) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "store_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "financial_transaction_id", null: false
+    t.string "occurrence"
+    t.float "value"
+    t.string "cpf"
+    t.string "card"
+    t.string "time"
+    t.string "store_owner"
+    t.string "store_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["financial_transaction_id"], name: "index_store_transactions_on_financial_transaction_id"
+  end
+
+  add_foreign_key "store_transactions", "financial_transactions"
 end
