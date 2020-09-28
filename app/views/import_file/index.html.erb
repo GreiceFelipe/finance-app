@@ -1,0 +1,59 @@
+<section class="section">
+    <div class="column is-mobile">
+        <div class="column is-10 is-offset-2">
+            <h2>Importar transações:</h2>
+            <%= form_tag({:action => :import}, multipart: true) do %>
+                        <%= file_field_tag :file %>
+                        <%= submit_tag( "Importar") %>
+            <% end %>
+        </div>
+    </div>
+    <div class="container column is-half is-mobile">
+        <h1 class="is-size-3 is-size-4-mobile has-text-centered"> Lista de transações</h1>
+    </div> 
+
+    <div class="column is-mobile">
+        <div class="column is-10 is-offset-2">
+            <div class="table-container">
+                <% @store_transactions.group_by(&:store_name).each do |store_name, transactions| %>
+                    <h2><%= store_name %></h2>
+                    <% total  = 0%>
+                    <table class="table is-striped" id="financial-transactions">
+                         <thead>
+                            <tr>
+                                <th>Transação</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Natureza</th>
+                                <th>CPF</th>
+                                <th>Cartão</th>
+                                <th>Hora</th>
+                                <th>Representante</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% transactions.each do |transaction| %>
+                                <tr>
+                                    <td><%= transaction.financial_transaction.description %></td>
+                                    <td><%= transaction.occurrence %></td>
+                                    <td><%= number_to_currency(transaction.value,unit: "R$", separator: ",", delimiter: "") %></td>
+                                    <td><%= transaction.financial_transaction.kind %></td>
+                                    <td><%= transaction.cpf %></td>
+                                    <td><%= transaction.card %></td>
+                                    <td><%= transaction.time %></td>
+                                    <td><%= transaction.store_owner %></td>
+                                </tr>
+                                <% total  = total.send(transaction.financial_transaction.sign, transaction.value)%>
+                            <% end %>
+                        </tbody>
+                    </table>
+                    <h2>Total: <%= number_to_currency(total,unit: "R$", separator: ",", delimiter: "") %></h2>
+                    <br>
+                <% end %>
+            </div>
+        </div>
+    </div>
+
+    
+
+</section>
